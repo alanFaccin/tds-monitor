@@ -1,0 +1,7 @@
+out
+node_modules
+.vscode-test/
+*.vsix
+*.map
+nls.*
+.vscode/mapa timestamp.txt

@@ -1,0 +1,202 @@
+{
+	"name": "totvs-monitor",
+	"displayName": "totvs-monitor",
+	"description": "%tds.package.description%",
+	"version": "0.0.1",
+	"publisher": "TOTVS",
+	"author": {
+		"name": "TOTVS",
+		"email": "tecnologia@totvs.com.br"
+	},
+	"license": "MIT",
+	"keywords": [
+		"multi-root ready"
+	],
+	"engines": {
+		"vscode": "^1.29.0",
+		"node": "^8.9.3"
+	},
+	"icon": "imagens/totvs-developer-studio.png",
+	"categories": [
+		"Other"
+	],
+	"publishConfig": {
+		"registry": "http://code.totvs.com:8081/repository/npm-private/"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/totvs/tds-monitor.git"
+	},
+	"bugs": {
+		"url": "https://github.com/totvs/tds-monitor/issues"
+	},
+	"scripts": {
+		"prepare": "tsc -p ./src",
+		"compile": "tsc -p ./src",
+		"tslint": "tslint ./src/**/*.ts",
+		"watch": "tsc -w -p ./src",
+		"test": "mocha -u tdd ./out/tests/",
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"package": "vsce package",
+		"publish": "vsce publish"
+	},
+	"dependencies": {
+		"@totvs/tds-ls": "^1.0.13",
+		"await-notify": "1.0.1",
+		"strip-json-comments": "^2.0.1",
+		"template-literal": "^1.0.3",
+		"vscode-languageclient": "^4.4.2",
+		"vscode-nls": "^4.1.0"
+	},
+	"devDependencies": {
+		"@types/mocha": "5.2.5",
+		"@types/node": "8.9.3",
+		"del": "^4.1.0",
+		"gulp": "^4.0.0",
+		"gulp-sourcemaps": "^2.6.5",
+		"gulp-tslint": "^8.1.4",
+		"gulp-typescript": "^5.0.1",
+		"gulp-util": "^3.0.8",
+		"mocha": "5.2.0",
+		"tslint": "5.11.0",
+		"typescript": "3.1.6",
+		"vsce": "1.53.0",
+		"vscode": "^1.1.33",
+		"vscode-nls-dev": "^3.2.6"
+	},
+	"main": "./out/extension",
+	"activationEvents": [
+		"onView:totvs_monitor"
+	],
+	"contributes": {
+		"languages": [],
+		"grammars": [],
+		"snippets": [],
+		"configurationDefaults": {},
+		"configuration": {
+			"type": "object",
+			"title": "Monitor",
+			"properties": {
+				"totvsLanguageServer.launch.args": {
+					"type": "array",
+					"default": [],
+					"description": "%tds.package.args.for.lsp%"
+				},
+				"totvsLanguageServer.maxNumberOfProblems": {
+					"scope": "resource",
+					"type": "number",
+					"default": 20,
+					"description": "%tds.package.max.problems.server%"
+				},
+				"totvsLanguageServer.trace.server": {
+					"scope": "window",
+					"type": "string",
+					"enum": [
+						"off",
+						"messages",
+						"verbose"
+					],
+					"default": "off",
+					"description": "%tds.package.trace.vscode.server%"
+				},
+				"totvsLanguageServer.welcomePage": {
+					"scope": "window",
+					"type": "boolean",
+					"default": true,
+					"description": "%tds.package.show.welcome.first.initialize%"
+				}
+			}
+		},
+		"commands": [
+			{
+				"command": "totvs-monitor.connect",
+				"title": "%tds.package.connect%",
+				"category": "TOTVS"
+			},
+			{
+				"command": "totvs-monitor.disconnect",
+				"title": "%tds.package.disconnect%",
+				"category": "TOTVS"
+			},
+			{
+				"command": "totvs-monitor.add",
+				"title": "%tds.package.add%",
+				"icon": {
+					"light": "resources/light/add.png",
+					"dark": "resources/dark/add.png"
+				},
+				"category": "TOTVS"
+			},
+			{
+				"command": "totvs-monitor.rename",
+				"title": "%tds.package.rename%"
+			}
+		],
+		"keybindings": [],
+		"breakpoints": [],
+		"debuggers": [],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "totvs-plataform",
+					"title": "TOTVS",
+					"icon": "imagens/totvs24x24.png"
+				}
+			]
+		},
+		"views": {
+			"totvs-plataform": [
+				{
+					"id": "totvs_monitor",
+					"name": "%tds.package.monitor.view%"
+				}
+			]
+		},
+		"menus": {
+			"explorer/context": [],
+			"view/item/context": [
+				{
+					"command": "totvs-monitor.connect",
+					"when": "view == totvs_monitor",
+					"group": "AtotvsMonitor@1"
+				},
+				{
+					"command": "totvs-monitor.disconnect",
+					"when": "view == totvs_monitor",
+					"group": "AtotvsMonitor@2"
+				},
+				{
+					"command": "totvs-monitor.add",
+					"when": "view == totvs_monitor",
+					"group": "BtotvsMonitor@1"
+				},
+				{
+					"command": "totvs-monitor.rename",
+					"when": "view == totvs_monitor && viewItem == monitorItem",
+					"group": "BtotvsMonitor@2"
+				}
+			],
+			"view/title": [
+				{
+					"command": "totvs-monitor.add",
+					"when": "view == totvs_monitor",
+					"group": "navigation"
+				}
+			],
+			"commandPalette": [
+				{
+					"command": "totvs-monitor.disconnect",
+					"when": "1 == 0"
+				},
+				{
+					"command": "totvs-monitor.connect",
+					"when": "1 == 0"
+				},
+				{
+					"command": "totvs-monitor.rename",
+					"when": "1 == 0"
+				}
+			]
+		}
+	}
+}
