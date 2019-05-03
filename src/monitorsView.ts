@@ -10,7 +10,7 @@ let localize = nls.loadMessageBundle();
 const compile = require('template-literal');
 
 const localizeHTML = {
-	"tds.webview.newServer.title": localize("tds.webview.newServer.title","New Server"),
+	"tds.webview.newServer.title": localize("tds.webview.newServer.title","New Server for monitor"),
 	"tds.webview.newServer.name": localize("tds.webview.newServer.name","Server Name"),
 	"tds.webview.newServer.address": localize("tds.webview.newServer.address","Address"),
 	"tds.webview.newServer.port": localize("tds.webview.newServer.port","Port"),
@@ -128,12 +128,16 @@ export class MonitorItem extends vscode.TreeItem {
 		return `${this.address}:${this.port}`;
 	}
 
+	get sessions(): Array<SessionSection> {
+		return this.listSessions;
+	}
+
 	iconPath = {
 		light: path.join(__filename, '..', '..', 'resources', 'light', connectedMonitorItem !== undefined && this.id === connectedMonitorItem.id ? 'monitor.connected.svg' : 'monitor.svg'),
 		dark: path.join(__filename, '..', '..', 'resources', 'dark', connectedMonitorItem !== undefined && this.id === connectedMonitorItem.id ? 'monitor.connected.svg' : 'monitor.svg')
 	};
 
-	contextValue = 'serverItem';
+	contextValue = 'monitorItem';
 }
 
 export class SessionSection extends vscode.TreeItem {
@@ -397,7 +401,7 @@ function sendAuthenticateRequest(serverItem: MonitorItem, environment: string, u
 	}).then((authenticationNode: AuthenticationNode) => {
 		let token: string = authenticationNode.connectionToken;
 		if (token) {
-			//vscode.window.showInformationMessage('Monitor ' + serverItem.label + ' connected!');
+			sendGetUsersRequest(token);
 			Utils.saveSelectMonitor(serverItem.id, token, serverItem.label, environment, user);
 			if (treeDataProvider !== undefined) {
 				connectedMonitorItem = serverItem;
@@ -410,6 +414,22 @@ function sendAuthenticateRequest(serverItem: MonitorItem, environment: string, u
 			vscode.window.showErrorMessage('Error connecting Monitor');
 			return false;
 		}
+	}, err => {
+		vscode.window.showErrorMessage(err);
+	});
+}
+
+function sendGetUsersRequest( token: string) {
+	languageClient.sendRequest('$totvsmonitor/getUsers', {
+		getUsersInfo: {
+			connectionToken: token
+		}
+	}).then((authenticationNode) => {
+
+		if (authenticationNode) {
+				treeDataProvider.refresh();
+			}
+			return true;
 	}, err => {
 		vscode.window.showErrorMessage(err);
 	});
