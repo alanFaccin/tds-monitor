@@ -424,9 +424,9 @@ function sendGetUsersRequest( token: string) {
 		getUsersInfo: {
 			connectionToken: token
 		}
-	}).then((authenticationNode) => {
+	}).then((response: GetUsersResult) => {
 
-		if (authenticationNode) {
+		if (response) {
 				treeDataProvider.refresh();
 			}
 			return true;
@@ -456,6 +456,10 @@ class DisconnectReturnInfo {
 class NodeError {
 	code: number;
 	message: string;
+}
+
+class GetUsersResult {
+	users: Array<string>;
 }
 
 function handleError(nodeError: NodeError) {
