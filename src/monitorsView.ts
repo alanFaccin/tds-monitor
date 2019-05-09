@@ -388,7 +388,7 @@ export function authenticate(serverItem: MonitorItem, environment: string, usern
 function sendAuthenticateRequest(serverItem: MonitorItem, environment: string, user: string, password: string) {
 	languageClient.sendRequest('$totvsserver/authentication', {
 		authenticationInfo: {
-			connType: 1,
+			connType: 13,
 			identification: serverItem.id,
 			server: serverItem.address,
 			port: serverItem.port,
