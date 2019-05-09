@@ -459,7 +459,27 @@ class NodeError {
 }
 
 class GetUsersResult {
-	users: Array<string>;
+	users: Array<MntUser>;
+}
+
+class MntUser {
+	username: string;
+	computerName: string;
+	threadId: number;
+	server: string;
+	mainName: string;
+	environment: string;
+	loginTime: string;
+	elapsedTime: string;
+	totalInstrCount: number;
+	instrCountPerSec: number;
+	remark: string;
+
+	memUsed: number;
+	sid: string;
+	ctreeTaskId: number;
+	clientType: string;
+	inactiveTime: string;
 }
 
 function handleError(nodeError: NodeError) {
