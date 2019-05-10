@@ -7,9 +7,10 @@ import { MonitorItem } from './monitor/monitorItem';
 import { languageClient } from './extension';
 import { inputConnectionParameters } from './inputConnectionParameters';
 import { MonitorItemProvider } from './monitor/monitorItemProvider';
+import { SessionSection } from './monitor/sessionSection';
+import * as compile from 'template-literal';
 
 let localize = nls.loadMessageBundle();
-const compile = require('template-literal');
 
 const localizeHTML = {
 	"tds.webview.newServer.title": localize("tds.webview.newServer.title", "New Server for monitor"),
@@ -32,9 +33,9 @@ export class MonitorsExplorer {
 		vscode.window.registerTreeDataProvider('totvs_monitor', treeDataProvider);
 
 		//Adiciona novo item a visão de monitor
-		vscode.commands.registerCommand('totvs-monitor.add', () => addMonitor(currentPanel, context));
+		context.subscriptions.push(vscode.commands.registerCommand('totvs-monitor.add', () => addMonitor(currentPanel, context)));
 		//Comando para renomear item da visão de monitor
-		vscode.commands.registerCommand('totvs-developer-studio.rename', (serverItem: MonitorItem) => renameMonitor(serverItem));
+		context.subscriptions.push(vscode.commands.registerCommand('totvs-developer-studio.rename', (serverItem: MonitorItem) => renameMonitor(serverItem)));
 	}
 
 }
@@ -68,8 +69,9 @@ function sendAuthenticateRequest(serverItem: MonitorItem, environment: string, u
 		}
 	}).then((authenticationNode: AuthenticationNode) => {
 		let token: string = authenticationNode.connectionToken;
+		serverItem.token = token;
 		if (token) {
-			sendGetUsersRequest(token);
+			sendGetUsersRequest(serverItem);
 			Utils.saveSelectMonitor(serverItem.id, token, serverItem.label, environment, user);
 			if (treeDataProvider !== undefined) {
 				connectedMonitorItem = serverItem;
@@ -87,13 +89,30 @@ function sendAuthenticateRequest(serverItem: MonitorItem, environment: string, u
 	});
 }
 
-function sendGetUsersRequest(token: string) {
+function sendGetUsersRequest(serverItem: MonitorItem) {
 	languageClient.sendRequest('$totvsmonitor/getUsers', {
 		getUsersInfo: {
-			connectionToken: token
+			connectionToken: serverItem.token
 		}
 	}).then((response: GetUsersResult) => {
-		if (response) {
+		if (response && treeDataProvider) {
+			connectedMonitorItem = serverItem;
+			const listSessions:Array<SessionSection> = getSessionList(response.mntUsers);
+			connectedMonitorItem.listSessions = listSessions;
+
+			serverItem.listSessions = listSessions;
+
+			let index = 0;
+			const lengthTree = treeDataProvider.localMonitorItems.length;
+			for(index = 0; index < lengthTree; index++){
+				const idTree:string = treeDataProvider.localMonitorItems[index].id;
+				if(idTree == serverItem.id){
+					break;
+				}
+			}
+
+			treeDataProvider.localMonitorItems[index].listSessions = serverItem.listSessions;
+
 			treeDataProvider.refresh();
 		}
 		return true;
@@ -102,6 +121,15 @@ function sendGetUsersRequest(token: string) {
 	});
 }
 
+function getSessionList(user: Array<MntUser>){
+	const listSessions:Array<SessionSection> = new Array<SessionSection>();
+
+	user.forEach(element => {
+		listSessions.push(new SessionSection(element.username));
+	});
+
+	return listSessions;
+}
 export class AuthenticationNode {
 	// These properties come directly from the language Monitor.
 	id: any;
@@ -126,27 +154,7 @@ class NodeError {
 }
 
 class GetUsersResult {
-	users: Array<MntUser>;
-}
-
-class MntUser {
-	username: string;
-	computerName: string;
-	threadId: number;
-	server: string;
-	mainName: string;
-	environment: string;
-	loginTime: string;
-	elapsedTime: string;
-	totalInstrCount: number;
-	instrCountPerSec: number;
-	remark: string;
-
-	memUsed: number;
-	sid: string;
-	ctreeTaskId: number;
-	clientType: string;
-	inactiveTime: string;
+	mntUsers: Array<MntUser>;
 }
 
 function handleError(nodeError: NodeError) {

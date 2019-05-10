@@ -31,9 +31,9 @@ export function activate(context: ExtensionContext) {
 
 	//Register commands
 	//Comando de conexão ao monitor
-	vscode.commands.registerCommand('totvs-monitor.connect', (monitorItem) => connectMonitor(monitorItem, context));
+	context.subscriptions.push(vscode.commands.registerCommand('totvs-monitor.connect', (monitorItem) => connectMonitor(monitorItem, context)));
 	//Comando de desconexão do monitor
-	vscode.commands.registerCommand('totvs-monitor.disconnect', (serverItem: MonitorItem) => disconnectMonitor(serverItem));
+	context.subscriptions.push(vscode.commands.registerCommand('totvs-monitor.disconnect', (serverItem: MonitorItem) => disconnectMonitor(serverItem)));
 
 	//View
 	let viewMonitor = new MonitorsExplorer(context);

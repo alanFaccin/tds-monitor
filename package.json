@@ -2,7 +2,7 @@
 	"name": "totvs-monitor",
 	"displayName": "totvs-monitor",
 	"description": "%tds.package.description%",
-	"version": "0.0.1",
+	"version": "0.0.5",
 	"publisher": "TOTVS",
 	"author": {
 		"name": "TOTVS",
@@ -41,18 +41,22 @@
 		"publish": "vsce publish"
 	},
 	"dependencies": {
-		"@totvs/tds-ls": "^1.0.13",
+		"@totvs/tds-ls": "^1.0.18",
 		"await-notify": "1.0.1",
+		"cheerio": "^1.0.0-rc.3",
+		"fs": "0.0.1-security",
 		"strip-json-comments": "^2.0.1",
 		"template-literal": "^1.0.3",
+		"tmp": "^0.1.0",
 		"vscode-languageclient": "^4.4.2",
-		"vscode-nls": "^4.1.0"
+		"vscode-nls": "^4.1.0",
+		"zlib": "^1.0.5"
 	},
 	"devDependencies": {
 		"@types/mocha": "5.2.5",
 		"@types/node": "8.9.3",
-		"del": "^4.1.0",
-		"gulp": "^4.0.0",
+		"del": "^4.1.1",
+		"gulp": "^4.0.2",
 		"gulp-sourcemaps": "^2.6.5",
 		"gulp-tslint": "^8.1.4",
 		"gulp-typescript": "^5.0.1",
@@ -61,7 +65,7 @@
 		"tslint": "5.11.0",
 		"typescript": "3.1.6",
 		"vsce": "1.53.0",
-		"vscode": "^1.1.33",
+		"vscode": "^1.1.34",
 		"vscode-nls-dev": "^3.2.6"
 	},
 	"main": "./out/extension",

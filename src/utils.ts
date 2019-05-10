@@ -3,8 +3,9 @@ import * as cheerio from 'cheerio';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as stripJsonComments from 'strip-json-comments';
+import * as os from 'os';
 
-const homedir = require('os').homedir();
+const homedir = os.homedir();
 
 import * as nls from 'vscode-nls';
 let localize = nls.loadMessageBundle();
@@ -136,7 +137,7 @@ export default class Utils {
 					'id': element.id,
 					'token': token,
 					'environment': element.environment,
-					'isConnected':  true
+					'isConnected': true
 				};
 				servers.connectedServer = server;
 				Utils._onDidSelectedMonitor.fire(server);
@@ -145,7 +146,6 @@ export default class Utils {
 
 		this.persistMonitorsInfo(servers);
 	}
-
 	/**
 	 * Notifica o cancelamento de seleção de servidor/ambiente
 	 */
@@ -309,14 +309,14 @@ export default class Utils {
 					try {
 						const fi: fs.Stats = fs.lstatSync(value);
 						if (!fi.isDirectory) {
-							const msg: string = localize("tds.webview.utils.reviewList","Review the folder list in order to search for settings (.ch). Not recognized as folder: {0}", value);
+							const msg: string = localize("tds.webview.utils.reviewList", "Review the folder list in order to search for settings (.ch). Not recognized as folder: {0}", value);
 							vscode.window.showWarningMessage(msg);
 						} else {
 							elements[index] = value;
 						}
 
 					} catch (error) {
-						const msg: string = localize("tds.webview.utils.reviewList2","Review the folder list in order to search for settings (.ch). Invalid folder: {0}", value);
+						const msg: string = localize("tds.webview.utils.reviewList2", "Review the folder list in order to search for settings (.ch). Invalid folder: {0}", value);
 						console.log(error);
 						vscode.window.showWarningMessage(msg);
 						elements[index] = "";
