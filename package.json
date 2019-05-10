@@ -1,6 +1,6 @@
 {
 	"name": "totvs-monitor",
-	"displayName": "totvs-monitor",
+	"displayName": "Totvs Monitor for VSCode",
 	"description": "%tds.package.description%",
 	"version": "0.0.5",
 	"publisher": "TOTVS",
@@ -20,9 +20,6 @@
 	"categories": [
 		"Other"
 	],
-	"publishConfig": {
-		"registry": "http://code.totvs.com:8081/repository/npm-private/"
-	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/totvs/tds-monitor.git"

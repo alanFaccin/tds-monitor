@@ -1,5 +1,5 @@
 {
-	"tds.package.description": "Totvs Monitor for vscode",
+	"tds.package.description": "Totvs Monitor for VSCode",
 	"tds.package.args.for.lsp": "Array containing extra arguments to pass to the TOTVS AdvPL LS binary",
 	"tds.package.max.problems.server": "Controls the maximum number of problems produced by the server.",
 	"tds.package.trace.vscode.server": "Traces the communication between VS Code and the language server.",
