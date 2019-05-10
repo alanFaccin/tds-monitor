@@ -6,7 +6,7 @@
 	"tds.package.show.welcome.first.initialize": "Totvs Monitor in First Initialize",
 	"tds.package.monitor.view": "Monitor",
 	"tds.package.connect": "Connect",
-	"tds.package.rename": "?",
+	"tds.package.rename": "Rename",
 	"tds.package.disconnect": "Disconnect",
 	"tds.package.add": "Add Server"
 }

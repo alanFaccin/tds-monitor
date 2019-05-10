@@ -13,8 +13,6 @@ Ele utiliza os protocolos de comunicação LSP (Language Server Protocol) que é
 * Desconectar de um servidor.
 * Listar usuarios conectados.(Em desenvolvimento)
 * Apresentar informações da conexão em uma View HTML. (Pendente)
-* .
-* .
 * etc (Lista de funcionalidades do Totvs Monitor)
 
 ## Configurações Gerais
