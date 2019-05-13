@@ -15,10 +15,6 @@ Ele utiliza os protocolos de comunicação LSP (Language Server Protocol) que é
 * Apresentar informações da conexão em uma View HTML. (Em desenvolvimento)
 * etc (Lista de funcionalidades do Totvs Monitor)
 
-## Configurações Gerais
-
-### Tela de boas vindas
-
 ### Cadastro de servidores utilizando o assistente
 
 * Clique no icone `"+"` no canto superior direito da visão, ao lado da aba `Servidores`.
