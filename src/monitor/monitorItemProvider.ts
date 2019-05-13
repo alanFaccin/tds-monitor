@@ -28,6 +28,12 @@ export class MonitorItemProvider implements vscode.TreeDataProvider<MonitorItem 
 				dark: path.join(__filename, '..', '..', '..', 'resources', 'dark', connectedMonitorItem !== undefined && element.id === connectedMonitorItem.id ? 'Monitor.connected.svg' : 'Monitor.svg')
 			};
 			element.iconPath = iconPath;
+		} else if (element instanceof SessionSection) {
+			let iconPath = {
+				light: path.join(__filename, '..', '..', '..', 'resources', 'light', 'user.png'),
+				dark: path.join(__filename, '..', '..', '..', 'resources', 'dark', 'user.png')
+			};
+			element.iconPath = iconPath;
 		}
 		return element;
 	}

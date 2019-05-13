@@ -112,6 +112,9 @@ function sendGetUsersRequest(serverItem: MonitorItem) {
 			}
 
 			treeDataProvider.localMonitorItems[index].listSessions = serverItem.listSessions;
+			treeDataProvider.localMonitorItems[index].collapsibleState = vscode.TreeItemCollapsibleState.Expanded;
+			//Workaround: Bug que nao muda visualmente o collapsibleState se o label permanecer intalterado
+			treeDataProvider.localMonitorItems[index].label = treeDataProvider.localMonitorItems[index].label.endsWith(' ') ? treeDataProvider.localMonitorItems[index].label.trim() : treeDataProvider.localMonitorItems[index].label + ' ';
 
 			treeDataProvider.refresh();
 		}
@@ -125,7 +128,11 @@ function getSessionList(user: Array<MntUser>){
 	const listSessions:Array<SessionSection> = new Array<SessionSection>();
 
 	user.forEach(element => {
-		listSessions.push(new SessionSection(element.username));
+		const obs = element.remark.toLowerCase();
+		if(obs.indexOf('developer') >= 0){
+			element.mainName = "TDS";
+		}
+		listSessions.push(new SessionSection(element.computerName, element.threadId, element.mainName, element.environment, element.elapsedTime));
 	});
 
 	return listSessions;

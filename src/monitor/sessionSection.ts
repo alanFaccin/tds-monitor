@@ -5,6 +5,10 @@ export class SessionSection extends vscode.TreeItem {
 
 	constructor(
 		public user: string,
+		public id: any,
+		public obs: string,
+		public envi: string,
+		public time: string
 	) {
 		super(user);
 	}
@@ -15,4 +19,12 @@ export class SessionSection extends vscode.TreeItem {
 	};
 
 	contextValue = 'envSection';
+
+	get tooltip(): string {
+		return `ENV=${this.envi} | Time Elapsed=${this.time}`;
+	}
+
+	get description(): string{
+		return `ID=${this.id} | Main=${this.obs}`;
+	}
 }
