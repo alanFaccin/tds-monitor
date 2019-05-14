@@ -52,7 +52,7 @@ export function getLanguageClient(context: ExtensionContext): LanguageClient {
 	}
 
 	let dir = "";
-	let ext = vscode.extensions.getExtension("TOTVS.totvs-monitor");
+	let ext = vscode.extensions.getExtension("TOTVS.tds-monitor");
 	if(ext !== undefined) {
 		dir = ext.extensionPath;
 	}

@@ -1,8 +1,8 @@
 {
-	"name": "totvs-monitor",
+	"name": "tds-monitor",
 	"displayName": "Totvs Monitor for VSCode",
 	"description": "%tds.package.description%",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"publisher": "TOTVS",
 	"author": {
 		"name": "TOTVS",
@@ -110,17 +110,17 @@
 		},
 		"commands": [
 			{
-				"command": "totvs-monitor.connect",
+				"command": "tds-monitor.connect",
 				"title": "%tds.package.connect%",
 				"category": "TOTVS"
 			},
 			{
-				"command": "totvs-monitor.disconnect",
+				"command": "tds-monitor.disconnect",
 				"title": "%tds.package.disconnect%",
 				"category": "TOTVS"
 			},
 			{
-				"command": "totvs-monitor.add",
+				"command": "tds-monitor.add",
 				"title": "%tds.package.add%",
 				"icon": {
 					"light": "resources/light/add.png",
@@ -129,7 +129,7 @@
 				"category": "TOTVS"
 			},
 			{
-				"command": "totvs-monitor.rename",
+				"command": "tds-monitor.rename",
 				"title": "%tds.package.rename%"
 			}
 		],
@@ -157,44 +157,44 @@
 			"explorer/context": [],
 			"view/item/context": [
 				{
-					"command": "totvs-monitor.connect",
+					"command": "tds-monitor.connect",
 					"when": "view == totvs_monitor",
 					"group": "AtotvsMonitor@1"
 				},
 				{
-					"command": "totvs-monitor.disconnect",
+					"command": "tds-monitor.disconnect",
 					"when": "view == totvs_monitor",
 					"group": "AtotvsMonitor@2"
 				},
 				{
-					"command": "totvs-monitor.add",
+					"command": "tds-monitor.add",
 					"when": "view == totvs_monitor",
 					"group": "BtotvsMonitor@1"
 				},
 				{
-					"command": "totvs-monitor.rename",
+					"command": "tds-monitor.rename",
 					"when": "view == totvs_monitor && viewItem == monitorItem",
 					"group": "BtotvsMonitor@2"
 				}
 			],
 			"view/title": [
 				{
-					"command": "totvs-monitor.add",
+					"command": "tds-monitor.add",
 					"when": "view == totvs_monitor",
 					"group": "navigation"
 				}
 			],
 			"commandPalette": [
 				{
-					"command": "totvs-monitor.disconnect",
+					"command": "tds-monitor.disconnect",
 					"when": "1 == 0"
 				},
 				{
-					"command": "totvs-monitor.connect",
+					"command": "tds-monitor.connect",
 					"when": "1 == 0"
 				},
 				{
-					"command": "totvs-monitor.rename",
+					"command": "tds-monitor.rename",
 					"when": "1 == 0"
 				}
 			]

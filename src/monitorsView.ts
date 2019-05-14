@@ -33,9 +33,9 @@ export class MonitorsExplorer {
 		vscode.window.registerTreeDataProvider('totvs_monitor', treeDataProvider);
 
 		//Adiciona novo item a visão de monitor
-		context.subscriptions.push(vscode.commands.registerCommand('totvs-monitor.add', () => addMonitor(currentPanel, context)));
+		context.subscriptions.push(vscode.commands.registerCommand('tds-monitor.add', () => addMonitor(currentPanel, context)));
 		//Comando para renomear item da visão de monitor
-		context.subscriptions.push(vscode.commands.registerCommand('totvs-developer-studio.rename', (serverItem: MonitorItem) => renameMonitor(serverItem)));
+		context.subscriptions.push(vscode.commands.registerCommand('tds-monitor.rename', (serverItem: MonitorItem) => renameMonitor(serverItem)));
 	}
 
 }
@@ -46,7 +46,7 @@ export function authenticate(serverItem: MonitorItem, environment: string, usern
 	}
 	//vscode.window.showInformationMessage("Initializing connection with Monitor " + serverItem.label);
 	if (connectedMonitorItem !== undefined) {
-		vscode.commands.executeCommand('totvs-developer-studio.disconnect', connectedMonitorItem).then(() => {
+		vscode.commands.executeCommand('tds-monitor.disconnect', connectedMonitorItem).then(() => {
 			sendAuthenticateRequest(serverItem, environment, username, password);
 		});
 	} else {
@@ -245,7 +245,7 @@ function addMonitor(currentPanel, context) {
 		currentPanel.reveal();
 	} else {
 		currentPanel = vscode.window.createWebviewPanel(
-			'totvs-monitor.add',
+			'tds-monitor.add',
 			'Novo Servidor',
 			vscode.ViewColumn.One,
 			{
