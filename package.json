@@ -130,7 +130,13 @@
 			},
 			{
 				"command": "tds-monitor.rename",
-				"title": "%tds.package.rename%"
+				"title": "%tds.package.rename%",
+				"category": "TOTVS"
+			},
+			{
+				"command": "tds-monitor.showInfos",
+				"title": "%tds.package.showInfos%",
+				"category": "TOTVS"
 			}
 		],
 		"keybindings": [],
@@ -175,6 +181,11 @@
 					"command": "tds-monitor.rename",
 					"when": "view == totvs_monitor && viewItem == monitorItem",
 					"group": "BtotvsMonitor@2"
+				},
+				{
+					"command": "tds-monitor.showInfos",
+					"when": "view == totvs_monitor && viewItem == monitorItem",
+					"group": "CtotvsMonitor@1"
 				}
 			],
 			"view/title": [
@@ -195,6 +206,10 @@
 				},
 				{
 					"command": "tds-monitor.rename",
+					"when": "1 == 0"
+				},
+				{
+					"command": "tds-monitor.showInfos",
 					"when": "1 == 0"
 				}
 			]

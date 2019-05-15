@@ -22,7 +22,8 @@ const localizeHTML = {
 }
 
 export let connectedMonitorItem: MonitorItem | undefined;
-let currentPanel: vscode.WebviewPanel | undefined = undefined;
+let panelAdd: vscode.WebviewPanel | undefined = undefined;
+let panelInfos: vscode.WebviewPanel | undefined = undefined;
 
 const treeDataProvider = new MonitorItemProvider();
 export class MonitorsExplorer {
@@ -32,10 +33,12 @@ export class MonitorsExplorer {
 
 		vscode.window.registerTreeDataProvider('totvs_monitor', treeDataProvider);
 
-		//Adiciona novo item a visão de monitor
-		context.subscriptions.push(vscode.commands.registerCommand('tds-monitor.add', () => addMonitor(currentPanel, context)));
-		//Comando para renomear item da visão de monitor
+		//Adiciona novo item a visão de monitor.
+		context.subscriptions.push(vscode.commands.registerCommand('tds-monitor.add', () => addMonitor(panelAdd, context)));
+		//Comando para renomear item da visão de monitor.
 		context.subscriptions.push(vscode.commands.registerCommand('tds-monitor.rename', (serverItem: MonitorItem) => renameMonitor(serverItem)));
+		//Comando para mostrar todas as informações do servidor selecionado.
+		context.subscriptions.push(vscode.commands.registerCommand('tds-monitor.showInfos', (serverItem: MonitorItem) => showInfos(panelInfos, context, serverItem)))
 	}
 
 }
@@ -71,6 +74,7 @@ function sendAuthenticateRequest(serverItem: MonitorItem, environment: string, u
 		let token: string = authenticationNode.connectionToken;
 		serverItem.token = token;
 		if (token) {
+			serverItem.isConnected= true;
 			sendGetUsersRequest(serverItem);
 			Utils.saveSelectMonitor(serverItem.id, token, serverItem.label, environment, user);
 			if (treeDataProvider !== undefined) {
@@ -97,16 +101,16 @@ function sendGetUsersRequest(serverItem: MonitorItem) {
 	}).then((response: GetUsersResult) => {
 		if (response && treeDataProvider) {
 			connectedMonitorItem = serverItem;
-			const listSessions:Array<SessionSection> = getSessionList(response.mntUsers);
+			const listSessions: Array<SessionSection> = getSessionList(response.mntUsers);
 			connectedMonitorItem.listSessions = listSessions;
 
 			serverItem.listSessions = listSessions;
 
 			let index = 0;
 			const lengthTree = treeDataProvider.localMonitorItems.length;
-			for(index = 0; index < lengthTree; index++){
-				const idTree:string = treeDataProvider.localMonitorItems[index].id;
-				if(idTree == serverItem.id){
+			for (index = 0; index < lengthTree; index++) {
+				const idTree: string = treeDataProvider.localMonitorItems[index].id;
+				if (idTree == serverItem.id) {
 					break;
 				}
 			}
@@ -124,15 +128,15 @@ function sendGetUsersRequest(serverItem: MonitorItem) {
 	});
 }
 
-function getSessionList(user: Array<MntUser>){
-	const listSessions:Array<SessionSection> = new Array<SessionSection>();
+function getSessionList(user: Array<MntUser>) {
+	const listSessions: Array<SessionSection> = new Array<SessionSection>();
 
 	user.forEach(element => {
 		const obs = element.remark.toLowerCase();
-		if(obs.indexOf('developer') >= 0){
+		if (obs.indexOf('developer') >= 0) {
 			element.mainName = "TDS";
 		}
-		listSessions.push(new SessionSection(element.computerName, element.threadId, element.mainName, element.environment, element.elapsedTime));
+		listSessions.push(new SessionSection(element));
 	});
 
 	return listSessions;
@@ -240,11 +244,11 @@ function renameMonitor(serverItem) {
 	}
 }
 
-function addMonitor(currentPanel, context) {
-	if (currentPanel) {
-		currentPanel.reveal();
+function addMonitor(panelAdd, context) {
+	if (panelAdd) {
+		panelAdd.reveal();
 	} else {
-		currentPanel = vscode.window.createWebviewPanel(
+		panelAdd = vscode.window.createWebviewPanel(
 			'tds-monitor.add',
 			'Novo Servidor',
 			vscode.ViewColumn.One,
@@ -255,16 +259,16 @@ function addMonitor(currentPanel, context) {
 			}
 		);
 
-		currentPanel.webview.html = getWebViewContent(context, localizeHTML);
-		currentPanel.onDidDispose(
+		panelAdd.webview.html = getWebViewContent(context, localizeHTML);
+		panelAdd.onDidDispose(
 			() => {
-				currentPanel = undefined;
+				panelAdd = undefined;
 			},
 			null,
 			context.subscriptions
 		);
 
-		currentPanel.webview.onDidReceiveMessage(message => {
+		panelAdd.webview.onDidReceiveMessage(message => {
 			switch (message.command) {
 				case 'saveServer':
 					const typeServer = "totvs_server_protheus";
@@ -287,9 +291,9 @@ function addMonitor(currentPanel, context) {
 						vscode.window.showErrorMessage("Add Monitor Fail. Name, port and Address are need")
 					}
 
-					if (currentPanel) {
+					if (panelAdd) {
 						if (message.close) {
-							currentPanel.dispose();
+							panelAdd.dispose();
 						}
 					}
 			}
@@ -297,6 +301,55 @@ function addMonitor(currentPanel, context) {
 			undefined,
 			context.subscriptions
 		);
+	}
+}
+
+function showInfos(panelInfos, context, serverItem) {
+	if (panelInfos) {
+		panelInfos.reveal();
+	} else {
+		panelInfos = vscode.window.createWebviewPanel(
+			'tds-monitor.showInfos',
+			'Informações de Monitor',
+			vscode.ViewColumn.One,
+			{
+				enableScripts: true,
+				localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, 'src', 'monitor'))],
+				retainContextWhenHidden: true
+			}
+		);
+
+		panelInfos.webview.html = getWebViewContent(context, localizeHTML);
+		panelInfos.onDidDispose(
+			() => {
+				panelInfos = undefined;
+			},
+			null,
+			context.subscriptions
+		);
+
+		panelInfos.webview.postMessage({
+			command: "setCurrentServer",
+			serverCurrent: serverItem
+		})
+
+		panelInfos.webview.onDidReceiveMessage(message => {
+			switch (message.command) {
+				case 'saveServer':
+					console.log("");
+					break;
+			}
+			if (panelInfos) {
+				if (message.close) {
+					panelInfos.dispose();
+				}
+			}
+		},
+			undefined,
+			context.subscriptions
+		);
+
+
 	}
 }
 
@@ -314,7 +367,7 @@ function createMonitor(typeServer: string, serverName: string, port: number, add
 
 function getWebViewContent(context, localizeHTML) {
 
-	const htmlOnDiskPath = vscode.Uri.file(path.join(context.extensionPath, 'src', 'server', 'addServer.html'));
+	const htmlOnDiskPath = vscode.Uri.file(path.join(context.extensionPath, 'src', 'monitor', 'showInfos.html'));
 	const cssOniskPath = vscode.Uri.file(path.join(context.extensionPath, 'resources', 'css', 'form.css'));
 
 	const htmlContent = fs.readFileSync(htmlOnDiskPath.with({ scheme: 'vscode-resource' }).fsPath);

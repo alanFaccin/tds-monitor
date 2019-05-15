@@ -7,6 +7,7 @@
 	"tds.package.monitor.view": "Monitor",
 	"tds.package.connect": "Connect",
 	"tds.package.rename": "Rename",
+	"tds.package.showInfos": "Show Infos",
 	"tds.package.disconnect": "Disconnect",
 	"tds.package.add": "Add Server"
 }
