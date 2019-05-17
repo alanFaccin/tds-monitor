@@ -18,7 +18,23 @@ const localizeHTML = {
 	"tds.webview.newServer.address": localize("tds.webview.newServer.address", "Address"),
 	"tds.webview.newServer.port": localize("tds.webview.newServer.port", "Port"),
 	"tds.webview.newServer.save": localize("tds.webview.newServer.save", "Save"),
-	"tds.webview.newServer.saveClose": localize("tds.webview.newServer.saveClose", "Save/Close")
+	"tds.webview.newServer.saveClose": localize("tds.webview.newServer.saveClose", "Save/Close"),
+	"tds.webview.monitor.col01": localize("tds.webview.monitor.col01", "User Name"),
+	"tds.webview.monitor.col02": localize("tds.webview.monitor.col02", "Environment"),
+	"tds.webview.monitor.col03": localize("tds.webview.monitor.col03", "Machine"),
+	"tds.webview.monitor.col04": localize("tds.webview.monitor.col04", "Thread ID"),
+	"tds.webview.monitor.col05": localize("tds.webview.monitor.col05", "User in Server"),
+	"tds.webview.monitor.col06": localize("tds.webview.monitor.col06", "Program"),
+	"tds.webview.monitor.col07": localize("tds.webview.monitor.col07", "Connections"),
+	"tds.webview.monitor.col08": localize("tds.webview.monitor.col08", "Elapsed Time"),
+	"tds.webview.monitor.col09": localize("tds.webview.monitor.col09", "Instructions"),
+	"tds.webview.monitor.col10": localize("tds.webview.monitor.col10", "Instructions/Seconds"),
+	"tds.webview.monitor.col11": localize("tds.webview.monitor.col11", "Comments"),
+	"tds.webview.monitor.col12": localize("tds.webview.monitor.col12", "Memory"),
+	"tds.webview.monitor.col13": localize("tds.webview.monitor.col13", "SID"),
+	"tds.webview.monitor.col14": localize("tds.webview.monitor.col14", "RPO"),
+	"tds.webview.monitor.col15": localize("tds.webview.monitor.col15", "Downtime"),
+	"tds.webview.monitor.col16": localize("tds.webview.monitor.col16", "Connection Type")
 }
 
 export let connectedMonitorItem: MonitorItem | undefined;
@@ -259,7 +275,7 @@ function addMonitor(panelAdd, context) {
 			}
 		);
 
-		panelAdd.webview.html = getWebViewContent(context, localizeHTML);
+		panelAdd.webview.html = getWebViewContentNewServer(context, localizeHTML);
 		panelAdd.onDidDispose(
 			() => {
 				panelAdd = undefined;
@@ -319,7 +335,7 @@ function showInfos(panelInfos, context, serverItem) {
 			}
 		);
 
-		panelInfos.webview.html = getWebViewContent(context, localizeHTML);
+		panelInfos.webview.html = getWebViewContentServerInfos(context, localizeHTML, serverItem.label + "(" + serverItem.description + ")");
 		panelInfos.onDidDispose(
 			() => {
 				panelInfos = undefined;
@@ -335,8 +351,29 @@ function showInfos(panelInfos, context, serverItem) {
 
 		panelInfos.webview.onDidReceiveMessage(message => {
 			switch (message.command) {
-				case 'saveServer':
-					console.log("");
+				case 'refreshInfos':
+					const infos = serverItem.listSessions;
+					const arrayInfo = Array();
+					for (let index = 0; index < infos.length; index++) {
+						arrayInfo.push( [ infos[index].username,
+															infos[index].environment,
+															infos[index].computerName,
+															infos[index].threadId,
+															infos[index].server,
+															infos[index].mainName,
+															infos[index].loginTime,
+															infos[index].elapsedTime,
+															infos[index].totalInstrCount,
+															infos[index].instrCountPerSec,
+															infos[index].remark,
+															infos[index].memUsed,
+															infos[index].sid,
+															infos[index].ctreeTaskId,
+															infos[index].inactiveTime,
+															infos[index].clientType] );
+					}
+
+					panelInfos.webview.postMessage(arrayInfo)
 					break;
 			}
 			if (panelInfos) {
@@ -365,15 +402,31 @@ function createMonitor(typeServer: string, serverName: string, port: number, add
 	return serverId;
 }
 
-function getWebViewContent(context, localizeHTML) {
-
-	const htmlOnDiskPath = vscode.Uri.file(path.join(context.extensionPath, 'src', 'monitor', 'showInfos.html'));
+function getWebViewContentNewServer(context, localizeHTML)
+{
+	const htmlOnDiskPath = vscode.Uri.file(path.join(context.extensionPath, 'src', 'server', 'addServer.html'));
 	const cssOniskPath = vscode.Uri.file(path.join(context.extensionPath, 'resources', 'css', 'form.css'));
 
 	const htmlContent = fs.readFileSync(htmlOnDiskPath.with({ scheme: 'vscode-resource' }).fsPath);
 	const cssContent = fs.readFileSync(cssOniskPath.with({ scheme: 'vscode-resource' }).fsPath);
 
+
 	let runTemplate = compile(htmlContent);
 
-	return runTemplate({ css: cssContent, localize: localizeHTML });
+	return runTemplate({ css: cssContent, localize: localizeHTML});
+}
+
+function getWebViewContentServerInfos(context, localizeHTML,tileView) {
+
+	const htmlOnDiskPath = vscode.Uri.file(path.join(context.extensionPath, 'src', 'monitor', 'showInfos.html'));
+	const cssTablePath = vscode.Uri.file(path.join(context.extensionPath, 'resources', 'css', 'table_materialize.css'));
+	const tableScriptPath = vscode.Uri.file(path.join(context.extensionPath, 'resources', 'script', 'table_materialize.js'));
+
+	const htmlContent = fs.readFileSync(htmlOnDiskPath.with({ scheme: 'vscode-resource' }).fsPath);
+	const cssTable = fs.readFileSync(cssTablePath.with({ scheme: 'vscode-resource' }).fsPath);
+	const scriptContent = fs.readFileSync(tableScriptPath.with({ scheme: 'vscode-resource' }).fsPath);
+
+	let runTemplate = compile(htmlContent);
+
+	return runTemplate({titleServer: tileView, css: cssTable, script: scriptContent, localize: localizeHTML });
 }
