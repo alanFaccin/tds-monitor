@@ -55,6 +55,6 @@ export class SessionSection extends vscode.TreeItem {
 	}
 
 	get description(): string{
-		return `ID=${this.sid} | Main=${this.mainName}`;
+		return `ID=${this.threadId} | Main=${this.mainName}`;
 	}
 }
