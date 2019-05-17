@@ -1,7 +1,4 @@
-# Change Log
-All notable changes to the "totvs-developer-studio" extension will be documented in this file.
-
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-- Initial release
+# Versão 0.0.7
+* Conexão com servidores.
+* Exibição de usuários conectados.
+* Exibir informações completas do monitor.

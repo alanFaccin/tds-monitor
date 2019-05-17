@@ -12,8 +12,8 @@ Ele utiliza os protocolos de comunicação LSP (Language Server Protocol) que é
 * Conectar a um servidor.
 * Desconectar de um servidor.
 * Listar usuarios conectados.
-* Apresentar informações da conexão em uma View HTML. (Em desenvolvimento)
-* etc (Lista de funcionalidades do Totvs Monitor)
+* Apresentar informações da conexão em uma View HTML.
+* etc (Lista de funcionalidades do Totvs Monitor) (Em Desenvolvimento)
 
 ### Cadastro de servidores utilizando o assistente
 
@@ -29,12 +29,12 @@ Ele utiliza os protocolos de comunicação LSP (Language Server Protocol) que é
 * Informe `ambiente`, `usuário` e `senha` (pode ser "em branco") para prosseguir.
 * Aguarde o termino da conexão.
 
+### Apresentação de informações
+
+* Após conectar a um servidor.
+* Clique com o botão direito no servidor e selecione a opção `Show Infos`.
+* Essa opção irá abrir uma página HTML com as informações de monitor.
+
 ## Problemas Conhecidos
 
 * NT.
-
-## Notas de Release
-
-* 0.0.1
-
-  * ---.
